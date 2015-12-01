@@ -7,14 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C040C5061C0E2E61007C1685 /* Readme in Resources */ = {isa = PBXBuildFile; fileRef = C040C5051C0E2E61007C1685 /* Readme */; };
 		C08B33581C0AA27600D6980B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08B33571C0AA27600D6980B /* AppDelegate.swift */; };
 		C08B335A1C0AA27600D6980B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08B33591C0AA27600D6980B /* ViewController.swift */; };
 		C08B335D1C0AA27600D6980B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C08B335B1C0AA27600D6980B /* Main.storyboard */; };
 		C08B335F1C0AA27600D6980B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C08B335E1C0AA27600D6980B /* Assets.xcassets */; };
 		C08B33621C0AA27600D6980B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C08B33601C0AA27600D6980B /* LaunchScreen.storyboard */; };
+		C08B336A1C0AA81A00D6980B /* BluetoothManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08B33691C0AA81A00D6980B /* BluetoothManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		C040C5051C0E2E61007C1685 /* Readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme; sourceTree = "<group>"; };
 		C08B33541C0AA27600D6980B /* GarageDoorOpener.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GarageDoorOpener.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C08B33571C0AA27600D6980B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C08B33591C0AA27600D6980B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +25,7 @@
 		C08B335E1C0AA27600D6980B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C08B33611C0AA27600D6980B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C08B33631C0AA27600D6980B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C08B33691C0AA81A00D6980B /* BluetoothManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BluetoothManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +42,7 @@
 		C08B334B1C0AA27600D6980B = {
 			isa = PBXGroup;
 			children = (
+				C040C5051C0E2E61007C1685 /* Readme */,
 				C08B33561C0AA27600D6980B /* GarageDoorOpener */,
 				C08B33551C0AA27600D6980B /* Products */,
 			);
@@ -56,6 +61,7 @@
 			children = (
 				C08B33571C0AA27600D6980B /* AppDelegate.swift */,
 				C08B33591C0AA27600D6980B /* ViewController.swift */,
+				C08B33691C0AA81A00D6980B /* BluetoothManager.swift */,
 				C08B335B1C0AA27600D6980B /* Main.storyboard */,
 				C08B335E1C0AA27600D6980B /* Assets.xcassets */,
 				C08B33601C0AA27600D6980B /* LaunchScreen.storyboard */,
@@ -122,6 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C040C5061C0E2E61007C1685 /* Readme in Resources */,
 				C08B33621C0AA27600D6980B /* LaunchScreen.storyboard in Resources */,
 				C08B335F1C0AA27600D6980B /* Assets.xcassets in Resources */,
 				C08B335D1C0AA27600D6980B /* Main.storyboard in Resources */,
@@ -136,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C08B335A1C0AA27600D6980B /* ViewController.swift in Sources */,
+				C08B336A1C0AA81A00D6980B /* BluetoothManager.swift in Sources */,
 				C08B33581C0AA27600D6980B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -286,6 +294,7 @@
 				C08B33681C0AA27600D6980B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

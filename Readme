@@ -1,0 +1,15 @@
+Quick and dirty garage opener-
+
+My old garage door opener stopped working and the remote was old enough to not be easily replaceable. My solution was to take an old bluetooth module left over from a project which had been superceded, solder on a mosfet, and write this app.
+Cost: $0, a couple hours, and some spare parts
+
+
+The Bluetooth module is a lightBlueBean which has an arduino compatible microcontroller attached to a mostly preconfigured bluetooth chip (a TI based model). I chose this because I had an existing module with a power converter already soldered on and I figured it would be a little quicker than using an NRF-51822 module (of which I have plenty lying around). The 51822 modules I have spare are early revision ones that don't support simultaneous multi-role operation which makes the extra work involved in setting them up not worth it. There's a small chance I'll update this project in the future when some better hardware is spare.
+
+
+Setting up the bluetooth module involves renaming the bean to match the beanName constant, setting a pin on the module, loading the arduino sketch, and attaching the power source and components.
+
+The garage door opener to which this is attached can be triggered by closing a 9v circuit for around a quarter of a second. The leads attached to the collector/emitter of the mosfet accomplish this task.
+
+
+Currently I'm only controlling one garage door with this, but it's pretty trivial to extend this setup to control many at once. The fact that these bean modules only support the peripheral role means that each and every garage door opener needs to be connected individually though.
