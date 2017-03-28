@@ -22,19 +22,19 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
     var scratchService:CBService?
     var scratch1Char:CBCharacteristic?
     
-    var commandData:NSData = {
+    var commandData:Data = {
         let bytes:[UInt8] = [0xDD,0xDD]
-        return NSData(bytes: bytes, length: 2)
+        return Data(bytes: UnsafePointer<UInt8>(bytes), count: 2)
     }()
     
     var unitIsReady:Bool {
-        return (bean != nil && bean!.state == .Connected && scratchService != nil && scratch1Char != nil)
+        return (bean != nil && bean!.state == .connected && scratchService != nil && scratch1Char != nil)
     }
     
     var nextStepInReadiness:BTPrepSteps {
-        guard centralManager != nil && centralManager.state == .PoweredOn else {return .EnableBluetooth}
+        guard centralManager != nil && centralManager.state == .poweredOn else {return .EnableBluetooth}
         guard bean != nil else {return .Scan}
-        guard bean!.state == .Connected else {return .Connect}
+        guard bean!.state == .connected else {return .Connect}
         guard scratchService != nil else {return .DiscoverService}
         guard scratch1Char != nil else {return .DiscoverCharacteristic}
         return .Ready
@@ -44,12 +44,12 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
     
     override init(){
         super.init()
-        centralManager = CBCentralManager(delegate: self, queue: dispatch_get_main_queue())
+        centralManager = CBCentralManager(delegate: self, queue: DispatchQueue.main)
     }
     
     
-    func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-        print("didDiscoverPeripheral: \(peripheral.name), \(peripheral.services)")
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        print("didDiscoverPeripheral: \(peripheral.name), \(String(describing: peripheral.services))")
         if peripheral.name == beanName{
             print("connecting...")
             centralManager.stopScan()
@@ -61,7 +61,7 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
     }
     
     
-    func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("didConnect")
 //        if scratchService == nil {
 //            peripheral.discoverServices([beanScratchServiceUUID])
@@ -71,26 +71,26 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
         proceedWithSetup()
     }
     
-    func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         print("didDisconnect")
         proceedWithSetup()
     }
     
-    func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         print("didFailToConnect:")
         proceedWithSetup()
     }
     
-    func centralManagerDidUpdateState(central: CBCentralManager) {
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
         proceedWithSetup()
     }
     
     
     
     //MARK:- Peripheral delegate
-    func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         print("didDiscoverCharacteristicsForService \(service)" )
-        if let scratchChar = service.characteristics?.filter({$0.UUID == beanScratch1CharUUID}).first {
+        if let scratchChar = service.characteristics?.filter({$0.uuid == beanScratch1CharUUID}).first {
             self.scratch1Char = scratchChar
         } else {
             centralManager.cancelPeripheralConnection(bean!)
@@ -98,9 +98,9 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
         proceedWithSetup()
     }
     
-    func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
-        print("didDiscoverServices \(peripheral.services)")
-        if let scratch = peripheral.services?.filter({$0.UUID == beanScratchServiceUUID}).first {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        print("didDiscoverServices \(String(describing: peripheral.services))")
+        if let scratch = peripheral.services?.filter({$0.uuid == beanScratchServiceUUID}).first {
             scratchService = scratch
             
         } else {
@@ -111,8 +111,8 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
     
     
     ///Using write with response is necessary to trigger the pairing dialog. The side effect is that it gives us feed back for visual display to the user, though the door opening and closing should be feedback enough.
-    func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
-        print("didWriteValueForCharacteristic: \(error)")
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        print("didWriteValueForCharacteristic: \(String(describing: error))")
         if error == nil {
             self.delegate?.writeResults(true)
         } else {
@@ -127,24 +127,24 @@ class BluetoothManager:NSObject, CBCentralManagerDelegate, CBPeripheralDelegate{
         self.delegate?.btStateChanged(nextStepInReadiness)
         switch nextStepInReadiness {
         case .EnableBluetooth: break
-        case .Scan: centralManager.scanForPeripheralsWithServices([beanAdvertisedUUID], options: nil)
-        case .Connect: centralManager.connectPeripheral(bean!, options: nil)
+        case .Scan: centralManager.scanForPeripherals(withServices: [beanAdvertisedUUID], options: nil)
+        case .Connect: centralManager.connect(bean!, options: nil)
         case .DiscoverService: bean!.discoverServices([beanScratchServiceUUID])
-        case .DiscoverCharacteristic: bean!.discoverCharacteristics([beanScratch1CharUUID], forService: scratchService!)
+        case .DiscoverCharacteristic: bean!.discoverCharacteristics([beanScratch1CharUUID], for: scratchService!)
         case .Ready: break
         }
     }
     
     func writeOpenCloseCommand(){
         if nextStepInReadiness == .Ready {
-            bean!.writeValue(commandData, forCharacteristic: scratch1Char!, type: .WithResponse)
+            bean!.writeValue(commandData, for: scratch1Char!, type: .withResponse)
         }
     }
 }
 
 protocol BTManagerDelegate {
-    func btStateChanged(state:BTPrepSteps)
-    func writeResults(success:Bool)
+    func btStateChanged(_ state:BTPrepSteps)
+    func writeResults(_ success:Bool)
 }
 
 

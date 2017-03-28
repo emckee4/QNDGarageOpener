@@ -31,7 +31,7 @@ class ViewController: UIViewController, BTManagerDelegate{
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         if btManager.nextStepInReadiness != .Ready {
             infoLabel.text = "Reconnecting"
             findAndConnectGDR()
@@ -50,29 +50,29 @@ class ViewController: UIViewController, BTManagerDelegate{
     @IBAction func buttonPressed(){
         switch btManager.nextStepInReadiness {
             case .Ready: btManager.writeOpenCloseCommand()
-            case .EnableBluetooth: UIApplication.sharedApplication().openURL(NSURL(string: UIApplicationOpenSettingsURLString)!)
+            case .EnableBluetooth: UIApplication.shared.openURL(URL(string: UIApplicationOpenSettingsURLString)!)
             default: btManager.proceedWithSetup()
         }
     }
     
     
-    func btStateChanged(state: BTPrepSteps) {
+    func btStateChanged(_ state: BTPrepSteps) {
         switch state {
         case .EnableBluetooth:
             self.infoLabel.text = "Bluetooth may be off"
-            button.setTitle("Open Settings", forState: .Normal)
+            button.setTitle("Open Settings", for: UIControlState())
         case .Ready:
-            button.setTitle("Open/Close", forState: .Normal)
+            button.setTitle("Open/Close", for: UIControlState())
             self.infoLabel.text = "Ready..."
         default:
-            button.setTitle("Retry Connection", forState: .Normal)
+            button.setTitle("Retry Connection", for: UIControlState())
             self.infoLabel.text = "Connecting..."
         }
     }
 
-    func writeResults(success:Bool){
-        button.backgroundColor = success ? UIColor.greenColor() : UIColor.redColor()
-        UIView.animateWithDuration(0.75, animations: { () -> Void in
+    func writeResults(_ success:Bool){
+        button.backgroundColor = success ? UIColor.green : UIColor.red
+        UIView.animate(withDuration: 0.75, animations: { () -> Void in
             self.button.backgroundColor = self.baseButtonColor
         })
     }
